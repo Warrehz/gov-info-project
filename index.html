@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <!--Bootstrap-->
+    <!--bootstrap-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!--JQuery-->
+    <!--jQuery-->
     <script src="https://code.jquery.com/jquery.js"></script>
   </head>
   <body>
@@ -19,7 +19,7 @@
           </div>
         </nav>
 
-        <!--Main hero image-->
+        <!--main hero image-->
         <div class="container">
           <div class="jumbotron">
               <h1>Lorem ipsum...</h1>
@@ -29,7 +29,7 @@
               <a class="btn btn-primary btn-lg" href="#" role="button">Find My Rep</a>
           </div>
 
-          <!--Panel for user to search-->
+          <!--panel for user to search-->
           <div class="panel panel-default">
             <div class="panel-heading">
               <h3 class="panel-title">Find Your State Representatives</h3>
@@ -37,8 +37,12 @@
             <div class="panel-body">
               <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Address</span>
-                <input type="text" class="form-control" placeholder="1600 Pennslyvania Ave NW, Washington, DC 20500" aria-describedby="basic-addon1">
+                <input id="adSearch" type="text" class="form-control" placeholder="1600 Pennslyvania Ave NW, Washington, DC 20500" aria-describedby="basic-addon1">
               </div>
+
+              <!--search button-->
+              <button id="searchBtn" type="submit" class="btn btn-primary btn-lg">Search</button>
+
             </div>
           </div>
 
