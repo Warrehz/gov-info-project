@@ -5,6 +5,8 @@
     <title></title>
     <!--bootstrap-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!--css-->
+    <link rel="stylesheet" href="assets/css/style.css">
     <!--jQuery-->
     <script src="https://code.jquery.com/jquery.js"></script>
   </head>
@@ -30,7 +32,7 @@
           </div>
 
           <!--panel for user to search-->
-          <div class="panel panel-default">
+          <div class="panel panel-danger">
             <div class="panel-heading">
               <h3>Search Your Representatives</h3>
             </div>
@@ -46,17 +48,15 @@
             </div>
           </div>
 
-          <!--panel to populate the information-->
-          <div class="panel panel-default">
+          <!--panel to hold results-->
+          <div id="results" class="panel panel-info">
             <div class="panel-heading">
-              <h3>State Officials</h3>
+              <h3>Your Representatives</h3>
             </div>
-            <div class="panel-body">
-              <!--location to append results-->
-              <div id="state-officials-0">
-              </div>
-            </div>
+            <table id="table-area" class="table">
+            </table>
           </div>
+
 
 
 
