@@ -25,6 +25,10 @@ function runQuery(search) {
     // console log the result object for error checking
     console.log(repData);
 
+    // erase current results if any
+    $('#table-area').empty();
+
+    // for looping through the object and logging all the officials
     for (i = 2; i < repData.offices.length; i++) {
 
       // variable to hold the relevant data
@@ -61,6 +65,24 @@ function runQuery(search) {
       // append table data to the panel
       $('#table-area').append('<tr><td><b>' + office + '</b></td><td>' + name + '</td><td>' + party + '</td><td>' + website + '</td></tr>');
 
+      // check if there are multiple officials with the same position, such as the senate
+      if (repData.offices[i].officialIndices.length > 1) {
+        let addOfficialPos = repData.offices[i].officialIndices[1];
+        let addName = repData.officials[addOfficialPos].name;
+        let addParty = repData.officials[addOfficialPos].party || "Not Provided";
+        let addWebsite = "";
+
+        // check if the additional official has a website
+        if (repData.officials[addOfficialPos].urls) {
+          addWebsite = repData.officials[addOfficialPos].urls[0];
+        } else {
+          addWebsite = "N/A";
+        }
+
+        // append the additional official
+        $('#table-area').append('<tr><td><b>' + office + '</b></td><td>' + addName + '</td><td>' + addParty + '</td><td>' + addWebsite + '</td></tr>');
+      }
+
       resultCounter++;
 
       // set search input bar to empty
@@ -76,9 +98,6 @@ $("#searchBtn").on("click", function() {
   // show resuls panel
   $('#results').show();
 
-  // erase current results if any
-  $('#table-area').empty();
-
   // take the search from user input
   searchByAddress = $("#adSearch").val().trim();
 
@@ -87,5 +106,7 @@ $("#searchBtn").on("click", function() {
 
   // run the function to search api
   runQuery(queryURL);
+
+  return false;
 
 });
