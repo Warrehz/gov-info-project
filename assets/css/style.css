@@ -1,3 +1,104 @@
+a {
+  text-decoration: none;
+}
+
+h3 {
+  font-family: 'Merriweather', serif;
+  color: #BF0A30;
+  font-size: 2.0em;
+}
+
 td {
   font-size: 1.1em;
+}
+
+.circle {
+  border-radius: 50%;
+  width: 22em;
+  height: 22em;
+  margin: 0 auto;
+  border: 5px solid #002868;
+}
+
+.circle img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.f-style {
+  font-family: Verdana, Geneva, sans-serif;
+}
+
+.jumbotron {
+  height: 20em;
+  background-size: cover;
+  background-image: url("../images/austin-cap.jpg");
+  background-position: center;
+  font-family: Verdana, Geneva, sans-serif;
+  color: #002868;
+  margin-bottom: 0px;
+  position: relative;
+}
+
+.navbar {
+  background-color: #FFFFFF;
+  margin-bottom: 0px;
+}
+
+.navbar-default {
+  border: none;
+}
+
+.navbar-brand {
+  font-size: 2.5em;
+  font-family: 'Felipa', cursive;
+}
+
+.navbar-default .navbar-brand {
+  color: #002868;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.15);
+  z-index: 0;
+}
+
+.section-one {
+  padding-top: 2.5em;
+}
+
+.glory-blue {
+  color: #002868;
+}
+
+.glory-red {
+  color: #BF0A30;
+}
+
+.glory-white {
+  color: #FFFFFF;
+}
+
+.b-glory-red {
+  background-color: #BF0A30;
+}
+
+.b-glory-blue {
+  background-color: #002868;
+}
+
+.blue-sep {
+  min-height: 10px;
+  background-color: #002868;
+}
+
+.red-sep {
+  min-height: 10px;
+  background-color: #BF0A30;
 }

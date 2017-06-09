@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!--css-->
     <link rel="stylesheet" href="assets/css/style.css">
+    <!--google font-->
+    <link href="https://fonts.googleapis.com/css?family=Felipa|Merriweather" rel="stylesheet">
     <!--jQuery-->
     <script src="https://code.jquery.com/jquery.js"></script>
   </head>
@@ -16,45 +18,90 @@
         <nav class="navbar navbar-default">
           <div class="container">
             <div class="navbar-header">
-              <a class="navbar-brand">APP NAME</a>
+              <div class="navbar-brand f-style">We the People</div>
             </div>
           </div>
         </nav>
 
-        <!--main hero image-->
+        <div class="blue-sep">
+        </div>
+
+        <div class="row">
+
+          <!--main hero image-->
+          <div class="jumbotron">
+            <div class="overlay">
+            </div>
+            <div class="container">
+              <h2></h2>
+              <p></p>
+            </div>
+          </div>
+
+          <div class="blue-sep">
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12 section-one">
+            <h3 class="text-center">Find Your Elected Officials</h3>
+            <h4 class="text-center">Not sure of your elected congressional official and need their contact information?</h4>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="circle">
+              <img src="assets/images/dec-of-indep.jpg">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="circle">
+              <img src="assets/images/white-house.jpeg">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="circle">
+              <img src="assets/images/house-of-reps.jpg">
+            </div>
+          </div>
+        </div>
+
         <div class="container">
 
-          <div class="jumbotron">
-              <h2>Stay Informed, Know Your Government Officials.</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          </div>
+          <div class="row">
 
-          <!--panel for user to search-->
-          <div class="page-header page-title">
-            <h3>Find Your Representatives</h3>
-          </div>
-
-          <form role="form">
-
-            <div class="form-group">
-              <label><h4>Address</h4></label>
-              <input id="adSearch" type="text" class="form-control" placeholder="1600 Pennslyvania Ave NW, Washington, DC 20500" aria-describedby="basic-addon1">
+            <!--panel for user to search-->
+            <div class="page-header page-title">
+              <h3 class="glory-blue f-style">Find Your Representatives</h3>
             </div>
 
-            <!--search button-->
-            <button id="searchBtn" type="submit" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-search"></span> Search</button>
+            <form role="form">
 
-          </form>
+              <div class="form-group">
+                <label><h4 class="glory-blue f-style">Search By Address:</h4></label>
+                <input id="adSearch" type="text" class="form-control" placeholder="1600 Pennslyvania Ave NW, Washington, DC 20500" aria-describedby="basic-addon1">
+              </div>
 
-          <br />
+              <!--search button-->
+              <button id="searchBtn" type="submit" class="btn btn-lg b-glory-red glory-white"><span class="glyphicon glyphicon-search"></span> Search </button>
 
-          <!--panel to hold results-->
-          <div id="results" class="panel panel-info">
-            <div class="panel-heading">
-              <h3>Your Representatives</h3>
+            </form>
+
+            <br />
+
+            <!--panel to hold results-->
+            <div id="results" class="panel panel-info">
+              <div class="panel-heading">
+                <h3>Your Government Representatives</h3>
+              </div>
+                <div class="table-responsive">
+                  <table id="table-area" class="table">
+                  </table>
+                </div>
             </div>
-            <table id="table-area" class="table">
-            </table>
+
           </div>
 
 
