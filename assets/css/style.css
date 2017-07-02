@@ -14,8 +14,8 @@ td {
 
 .circle {
   border-radius: 50%;
-  width: 22em;
-  height: 22em;
+  width: 18em;
+  height: 18em;
   margin: 0 auto;
   border: 7px solid #002868;
 }
@@ -75,6 +75,10 @@ td {
 
 .pdbot {
   padding-bottom: 0.75em;
+}
+
+.pdtop {
+  padding-top: 2.0em;
 }
 
 .section-one {
