@@ -2,122 +2,80 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
-    <!--bootstrap-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!--css-->
-    <link rel="stylesheet" href="assets/css/style.css">
-    <!--google font-->
-    <link href="https://fonts.googleapis.com/css?family=Felipa|Merriweather" rel="stylesheet">
-    <!--jQuery-->
+    <title>We the People</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
   </head>
   <body>
 
-        <!--Navigation bar-->
-        <nav class="navbar navbar-default">
-          <div class="container">
-            <div class="navbar-header">
-              <div class="navbar-brand f-style">We the People</div>
-            </div>
-          </div>
-        </nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
-        <div class="row">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-          <div class="blue-sep">
-          </div>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
 
-          <!--main hero image-->
-          <div class="jumbotron">
-            <div class="overlay">
-            </div>
-            <div class="container">
-              <h2></h2>
-              <p></p>
-            </div>
-          </div>
+    </nav>
 
-          <div class="blue-sep">
-          </div>
 
-        </div>
 
+    <div class="container">
+
+      <div class="jumbotron jumbotron-fluid mt-5">
         <div class="container">
-
-          <div class="row">
-            <div class="col-sm-12 section-one">
-              <h3 class="text-center pdbot">Stay Informed, Take Action</h3>
-              <h4 class="text-center filler pdbot">Not sure of your elected congressional official and need their contact information? Simply enter your complete address</h4>
-              <h4 class="text-center filler pdbot">or city and we will match you with your corresponding representatives.</h4>
-
-            </div>
-
-          </div>
-
-          <div class="row">
-            <div class="col-sm-4">
-              <div class="circle">
-                <img src="assets/images/white-house.jpg">
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="circle">
-                <img src="assets/images/dec-of-indep.jpg">
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="circle">
-                <img src="assets/images/house-of-reps.png">
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-
-            <!--panel for user to search-->
-            <div class="page-title text-center pdtop">
-              <h3>Find Your Representatives</h3>
-            </div>
-
-            <form role="form">
-
-              <div class="form-group">
-                <label><h4 class="glory-blue f-style">Search By Address</h4></label><input id="adSearch" type="text" class="form-control" placeholder="1600 Pennslyvania Ave NW, Washington, DC 20500" aria-describedby="basic-addon1">
-
-              </div>
-
-              <!--search button-->
-              <button id="searchBtn" type="submit" class="btn btn-lg b-glory-red glory-white"><span class="glyphicon glyphicon-search"></span> Search </button>
-
-            </form>
-
-            <br />
-
-            <!--panel to hold results-->
-            <div id="results" class="panel">
-              <div class="panel-heading text-center">
-                <h3>Your Elected Officials</h3>
-              </div>
-                <div class="table-responsive">
-                  <table id="table-area" class="table">
-                  </table>
-                </div>
-            </div>
-
-          </div>
-
-
+          <h1 class="display-4">Fluid jumbotron</h1>
+          <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
         </div>
+      </div>
 
-        <!--footer-->
-        <footer>
-        </footer>
+      <form role="form">
+        <div class="form-group">
+          <label><h4>Search By Address</h4></label><input id="adSearch" type="text" class="form-control" placeholder="1600 Pennslyvania Ave NW, Washington, DC 20500">
+        </div>
+        <button id="searchBtn" type="submit" class="btn btn-primary">Search</button>
+      </form>
 
-        <!--script for search functionality-->
-        <script src="gov-info-api.js"></script>
+      <!--panel to hold results-->
+      <div id="results" class="panel">
+        <div class="panel-heading text-center">
+          <h3>Your Elected Officials</h3>
+        </div>
+          <div class="table-responsive">
+            <table id="table-area" class="table">
+            </table>
+          </div>
+      </div>
 
-      </body>
 
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+  <!--script for search functionality-->
+  <script src="gov-info-api.js"></script>
   </body>
 </html>
