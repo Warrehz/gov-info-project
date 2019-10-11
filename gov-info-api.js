@@ -1,14 +1,11 @@
 // key for google civic api
-let authKey = "AIzaSyDI6y22UiWcVtePvg5EMGB0ifIiV4TKgQ4"
+let authKey = config.civic;
 
 // variables to use for the search
-let searchByAddress = ""
+let searchByAddress = "";
 
 // query url to use for api call
-let baseQueryURL = "https://www.googleapis.com/civicinfo/v2/representatives?key=" + authKey + "&address="
-
-// counter to give each resulting div a unique identifier
-let resultCounter = 1
+let baseQueryURL = "https://www.googleapis.com/civicinfo/v2/representatives?key=" + authKey + "&address=";
 
 // hide results panel at first load
 $(document).ready(function() {
@@ -20,71 +17,36 @@ function runQuery(search) {
   $.ajax({
     url: search,
     method: "GET"
-  }).done(function(repData) {
+  }).done(function(res) {
 
     // console log the result object for error checking
-    console.log(repData);
+    console.log(res);
 
     // erase current results if any
-    $('#table-area').empty();
+    $('#results').empty();
 
     // for looping through the object and logging all the officials
-    for (i = 2; i < repData.offices.length; i++) {
+    for (let i = 0; i < res.officials.length; i++) {
 
-      // variable to hold the relevant data
-      let namePos = repData.offices[i].officialIndices[0];
-      let name = repData.officials[namePos].name;
-      let office = repData.offices[i].name;
-      // let address = repData.officials[namePos].address[0].line1;
-      // let phone = repData.officials[namePos].phones[0];
-      let party = "";
-      let website = "";
-      let imgURL = "";
+      // binding to hold the official indices position
+      let pos = res.offices[i].officialIndices;
 
-      // check if the object has urls value and set variable to appropriate data
-      if (repData.officials[namePos].urls) {
-        website = repData.officials[namePos].urls[0];
-      } else {
-        website = "N/A";
-      }
+      for (let j = 0; j < pos.length; j++) {
 
-      // check if object has a photo for the representative, if not give it a placeholder
-      if (repData.officials[namePos].photoUrl) {
-        imgURL = repData.officials[namePos].photoUrl;
-      } else {
-        imgURL = "http://placehold.it/100x100"
-      }
+        let name = res.officials[pos[j]].name;
+        let office = res.offices[i].name;
+        let party = "";
 
-      // check if object has valid party affiliation for representative, if not give it a placeholder
-      if (repData.officials[namePos].party == "Unknown" || repData.officials[namePos].party == undefined) {
-        party = "Not Provided"
-      } else {
-        party = repData.officials[namePos].party;
-      }
-
-      // append table data to the panel
-      $('#table-area').append('<tr><td><b>' + office + '</b></td><td>' + name + '</td><td>' + party + '</td><td>' + website + '</td></tr>');
-
-      // check if there are multiple officials with the same position, such as the senate
-      if (repData.offices[i].officialIndices.length > 1) {
-        let addOfficialPos = repData.offices[i].officialIndices[1];
-        let addName = repData.officials[addOfficialPos].name;
-        let addParty = repData.officials[addOfficialPos].party || "Not Provided";
-        let addWebsite = "";
-
-        // check if the additional official has a website
-        if (repData.officials[addOfficialPos].urls) {
-          addWebsite = repData.officials[addOfficialPos].urls[0];
-        } else {
-          addWebsite = "N/A";
+        if (res.officials[i].party == "Republican Party" || res.officials[i].party == "Republican") {
+          party = "Republican";
+        }
+        else if (res.officials[i].party == "Democratic Party" || res.officials[i].party == "Democratic") {
+          party = "Democratic";
         }
 
-        // append the additional official
-        $('#table-area').append('<tr><td><b>' + office + '</b></td><td>' + addName + '</td><td>' + addParty + '</td><td>' + addWebsite + '</td></tr>');
+        buildCard(name, office, party);
+
       }
-
-      resultCounter++;
-
       // set search input bar to empty
       $('#adSearch').val('');
     }
@@ -110,3 +72,19 @@ $("#searchBtn").on("click", function() {
   return false;
 
 });
+
+const buildCard = (name, office, party) => {
+
+  let card = `<div class="card" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">` + name + `</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">` + office + `</h6>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="card-link">` + party + `</a>
+                  </div>
+                </div>`;
+
+    // append table data to the panel
+    $('#results').append(card);
+
+}
