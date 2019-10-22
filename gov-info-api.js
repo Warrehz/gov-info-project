@@ -68,6 +68,18 @@ function votingQuery(search) {
     // console log the response object for help traversing
     console.log(res);
 
+    for (let i = 0; i < res.earlyVoteSites.length; i++) {
+      let locName = camelCaseMe(res.earlyVoteSites[i].address.locationName);
+      let locAddress = res.earlyVoteSites[i].address.line1;
+      let locCity = res.earlyVoteSites[i].address.city;
+      let locState = res.earlyVoteSites[i].address.state;
+      let locZip = res.earlyVoteSites[i].address.zip;
+
+      console.log(locName + locAddress + locCity + locState + locZip);
+
+      buildVoteLocation(locName, locAddress, locCity, locState, locZip);
+    }
+
   });
 }
 
@@ -114,21 +126,55 @@ const buildRepCard = (name, office, party, photo) => {
 
 }
 
-const buildVoteLocation = (name, address, hours) => {
+const buildVoteLocation = (name, address, city, state, zip) => {
 
-  let location = `<div class="card" style="width: 18rem;">
+  let location = `<div class="card" style="width: 21rem;">
                     <div class="card-body">
                       <h5 class="card-title">` + name + `</h5>
                       <h6 class="card-subtitle mb-2 text-muted">` + address + `</h6>
-                      <p class="card-text">` + hours + `</p>
+                      <h6 class="card-subtitle mb-2 text-muted">` + city + `, ` + state + ` ` + zip + `</h6>
                       <a href="#" class="card-link">Card link</a>
                       <a href="#" class="card-link">Another link</a>
                     </div>
                   </div>`;
 
   // append the location card
-  $('locations-results').append(location);
+  $('#locations-results').append(location);
+}
+
+// function to turn string into camel case
+const camelCaseMe = (str) => {
+
+  // first set string to all lowercase
+  let strings = str.toLowerCase();
+  let string = "";
+
+  // now break it into an array of sub-strings based on whitespace
+  strings = strings.split(" ");
+
+  // loop through array of strings and convert first letter to uppercase
+  for (let i = 0; i < strings.length; i++) {
+    string = strings[i];
+    string = string.split("");
+    string[0] = string[0].toUpperCase();
+    string = string.join("");
+    strings[i] = string;
+  }
+
+  // join array of camel case strings into one string
+  strings = strings.join(" ");
+
+  return strings;
+
+};
+
+const upperMe = (str) => {
+  return str.charAt(0).toUpperCase;
 }
 
 // call function on page load to populate content
 runQuery(baseQueryURL + "1600 Pennslyvania Ave NW, Washington, DC 20500");
+votingQuery(votingLocation + "2141 Woodston Drive Round Rock Texas 78681");
+
+//TESTS
+camelCaseMe("THIS IS A STRING TO TEST CAMEL CASE ON");
