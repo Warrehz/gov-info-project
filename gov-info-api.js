@@ -23,7 +23,7 @@ function runQuery(search) {
   }).done(function(res) {
 
     // console log the result object for error checking
-    console.log(res);
+    console.log(res.statusCode);
 
     // erase current results if any
     $('#rep-results').empty();
@@ -63,7 +63,14 @@ function votingQuery(search) {
   $.ajax({
     url: search,
     method: "GET"
-  }).done(function(res) {
+  }).fail(function(res) {
+    console.log("Error: " + res.status)
+    voteLocationFail();
+  })
+  .done(function(res) {
+
+    // erase any existing data
+    $('#locations-results').empty();
 
     // console log the response object for help traversing
     console.log(res);
@@ -74,10 +81,12 @@ function votingQuery(search) {
       let locCity = res.earlyVoteSites[i].address.city;
       let locState = res.earlyVoteSites[i].address.state;
       let locZip = res.earlyVoteSites[i].address.zip;
+      let locStart = res.earlyVoteSites[i].startDate;
+      let locEnd = res.earlyVoteSites[i].endDate;
 
       console.log(locName + locAddress + locCity + locState + locZip);
 
-      buildVoteLocation(locName, locAddress, locCity, locState, locZip);
+      buildVoteLocation(locName, locAddress, locCity, locState, locZip, locStart, locEnd);
     }
 
   });
@@ -103,6 +112,8 @@ $("#searchBtn").on("click", function() {
 
 });
 
+
+// function to build representative card
 const buildRepCard = (name, office, party, photo) => {
 
   let card = `<div class="card mb-3" style="width: 520px;">
@@ -123,24 +134,51 @@ const buildRepCard = (name, office, party, photo) => {
 
     // append the representative card
     $('#rep-results').append(card);
+};
 
-}
+// function to build location card
+const buildVoteLocation = (name, address, city, state, zip, start, end) => {
 
-const buildVoteLocation = (name, address, city, state, zip) => {
-
-  let location = `<div class="card" style="width: 21rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">` + name + `</h5>
-                      <h6 class="card-subtitle mb-2 text-muted">` + address + `</h6>
-                      <h6 class="card-subtitle mb-2 text-muted">` + city + `, ` + state + ` ` + zip + `</h6>
-                      <a href="#" class="card-link">Card link</a>
-                      <a href="#" class="card-link">Another link</a>
+  let location = `<div class="card" style="width: 21rem; height 50rem;">
+                    <div class="card-body d-flex align-items-start flex-column">
+                      <div>
+                        <h5 class="card-title">` + name + `</h5>
+                      </div>
+                      <div class="mt-auto">
+                        <h6 class="card-subtitle mb-2 text-muted">` + address + `</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">` + city + `, ` + state + ` ` + zip + `</h6>
+                        <div class="mb-2">
+                          <p class="card-text"><strong>Start:</strong> ` + start + `</p>
+                          <p class="card-text"><strong>End:</strong> ` + end + `</p>
+                        </div>
+                        <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a>
+                      </div>
                     </div>
                   </div>`;
 
   // append the location card
   $('#locations-results').append(location);
-}
+};
+
+// function to build placeholder on fail
+const voteLocationFail = () => {
+
+  let failMessage = `<div class="card text-center w-100">
+                      <div class="card-header">
+                      </div>
+                      <div class="card-body">
+                        <h5 class="card-title">No Upcoming Elections</h5>
+                        <p class="card-text">No state or national elections are set to take place in the near future.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                      </div>
+                     </div>`;
+
+  $("#locations-results").append(failMessage);
+
+};
+
+
 
 // function to turn string into camel case
 const camelCaseMe = (str) => {
@@ -173,8 +211,8 @@ const upperMe = (str) => {
 }
 
 // call function on page load to populate content
-runQuery(baseQueryURL + "1600 Pennslyvania Ave NW, Washington, DC 20500");
-votingQuery(votingLocation + "2141 Woodston Drive Round Rock Texas 78681");
+runQuery(baseQueryURL + "1600 Pennsylvania Ave NW, Washington, DC 20500");
+votingQuery(votingLocation + "1600 Pennsylvania Ave NW, Washington, DC 20500");
 
 //TESTS
 camelCaseMe("THIS IS A STRING TO TEST CAMEL CASE ON");

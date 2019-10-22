@@ -1,3 +1,17 @@
+#adSearch {
+  width: 85%;
+  border-radius: .25rem 0px 0px .25rem;
+}
+
+button#searchBtn {
+  width: 15%;
+  border-radius: 0px .25rem .25rem 0px;
+}
+
 .card {
   margin: 1rem;
+}
+
+.card-text {
+  margin-bottom: 0;
 }
