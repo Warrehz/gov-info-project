@@ -10,11 +10,6 @@ let baseQueryURL = "https://www.googleapis.com/civicinfo/v2/representatives?key=
 // url for voting location data
 let votingLocation = "https://www.googleapis.com/civicinfo/v2/voterinfo?key=" + authKey + "&address="
 
-// hide results panel at first load
-$(document).ready(function() {
-    $('#results').hide();
-});
-
 // function to return representatives based on address
 function runQuery(search) {
   $.ajax({
@@ -22,17 +17,18 @@ function runQuery(search) {
     method: "GET"
   }).done(function(res) {
 
-    // console log the result object for error checking
-    console.log(res.statusCode);
+    console.log(res);
 
     // erase current results if any
     $('#rep-results').empty();
 
     // for looping through the object and logging all the officials
-    for (let i = 0; i < res.officials.length; i++) {
+    for (let i = 0; i < res.officials.length - 1; i++) {
 
       // binding to hold the official indices position
       let pos = res.offices[i].officialIndices;
+
+      console.log(pos);
 
       for (let j = 0; j < pos.length; j++) {
 
@@ -64,6 +60,7 @@ function votingQuery(search) {
     url: search,
     method: "GET"
   }).fail(function(res) {
+    $('#locations-results').empty();
     console.log("Error: " + res.status)
     voteLocationFail();
   })
@@ -71,11 +68,13 @@ function votingQuery(search) {
 
     // erase any existing data
     $('#locations-results').empty();
+    $('#polling-results').empty();
 
     // console log the response object for help traversing
     console.log(res);
 
-    for (let i = 0; i < res.earlyVoteSites.length; i++) {
+    // setting to only half the amount of cards that the response object can help create so I can icnlude a "show more >>" button or pagination
+    for (let i = 0; i < res.earlyVoteSites.length / 2; i++) {
       let locName = camelCaseMe(res.earlyVoteSites[i].address.locationName);
       let locAddress = res.earlyVoteSites[i].address.line1;
       let locCity = res.earlyVoteSites[i].address.city;
@@ -84,9 +83,19 @@ function votingQuery(search) {
       let locStart = res.earlyVoteSites[i].startDate;
       let locEnd = res.earlyVoteSites[i].endDate;
 
-      console.log(locName + locAddress + locCity + locState + locZip);
-
       buildVoteLocation(locName, locAddress, locCity, locState, locZip, locStart, locEnd);
+    }
+
+    // setting to only 6 cards at the moment so I can icnlude a "show more >>" button or pagination
+    for (let j = 0; j < 6; j++) {
+      let pollName = res.pollingLocations[j].address.locationName;
+      let pollAddress = res.pollingLocations[j].address.line1;
+      let pollCity = res.pollingLocations[j].address.city;
+      let pollState = res.pollingLocations[j].address.state;
+      let pollZip = res.pollingLocations[j].address.zip;
+      let pollHours = res.pollingLocations[j].pollingHours;
+
+      buildPollingLocation(pollName, pollAddress, pollCity, pollState, pollZip, pollHours);
     }
 
   });
@@ -116,7 +125,7 @@ $("#searchBtn").on("click", function() {
 // function to build representative card
 const buildRepCard = (name, office, party, photo) => {
 
-  let card = `<div class="card mb-3" style="width: 520px;">
+  let card = `<div class="card shadow mb-3" style="width: 520px;">
                 <div class="row no-gutters">
                   <div class="col-md-3">
                     <img src="` + photo + `" class="card-img" alt="..." style="height: 100%;">
@@ -139,7 +148,7 @@ const buildRepCard = (name, office, party, photo) => {
 // function to build location card
 const buildVoteLocation = (name, address, city, state, zip, start, end) => {
 
-  let location = `<div class="card" style="width: 21rem; height 50rem;">
+  let location = `<div class="card shadow" style="width: 21rem; height 50rem;">
                     <div class="card-body d-flex align-items-start flex-column">
                       <div>
                         <h5 class="card-title">` + name + `</h5>
@@ -161,16 +170,37 @@ const buildVoteLocation = (name, address, city, state, zip, start, end) => {
   $('#locations-results').append(location);
 };
 
+// function to build polling card
+const buildPollingLocation = (name, address, city, state, zip, hours) => {
+
+  let location = `<div class="card shadow" style="width: 21rem; height 50rem;">
+                    <div class="card-body d-flex align-items-start flex-column">
+                      <div>
+                        <h5 class="card-title">` + name + `</h5>
+                      </div>
+                      <div class="mt-auto">
+                        <h6 class="card-subtitle mb-2 text-muted">` + address + `</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">` + city + `, ` + state + ` ` + zip + `</h6>
+                        <div class="mb-2">
+                          <p class="card-text"><strong>Start:</strong> ` + hours + `</p>
+                        </div>
+                        <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a>
+                      </div>
+                    </div>
+                  </div>`;
+
+  // append the location card
+  $('#polling-results').append(location);
+};
+
 // function to build placeholder on fail
 const voteLocationFail = () => {
 
-  let failMessage = `<div class="card text-center w-100">
-                      <div class="card-header">
-                      </div>
+  let failMessage = `<div class="card text-center w-100 alert alert-danger">
                       <div class="card-body">
                         <h5 class="card-title">No Upcoming Elections</h5>
                         <p class="card-text">No state or national elections are set to take place in the near future.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
                       </div>
                      </div>`;
 
@@ -211,8 +241,5 @@ const upperMe = (str) => {
 }
 
 // call function on page load to populate content
-runQuery(baseQueryURL + "1600 Pennsylvania Ave NW, Washington, DC 20500");
-votingQuery(votingLocation + "1600 Pennsylvania Ave NW, Washington, DC 20500");
-
-//TESTS
-camelCaseMe("THIS IS A STRING TO TEST CAMEL CASE ON");
+runQuery(baseQueryURL + "615 Red River St, Austin, TX 78701");
+votingQuery(votingLocation + "615 Red River St, Austin, TX 78701");

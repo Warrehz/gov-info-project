@@ -15,3 +15,13 @@ button#searchBtn {
 .card-text {
   margin-bottom: 0;
 }
+
+.gradient {
+  background-image: linear-gradient(to right, #E91D0E, #0015BC);
+  color: #FFFFFF;
+  border-radius: 0.25rem;
+}
+
+.shadow {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19);
+}
