@@ -8,7 +8,7 @@ let searchByAddress = "";
 let baseQueryURL = "https://www.googleapis.com/civicinfo/v2/representatives?key=" + authKey + "&address=";
 
 // url for voting location data
-let votingLocation = "https://www.googleapis.com/civicinfo/v2/voterinfo?key=" + authKey + "&address="
+let votingLocation = "https://www.googleapis.com/civicinfo/v2/voterinfo?key=" + authKey + "&address=";
 
 // function to return representatives based on address
 function runQuery(search) {
@@ -17,40 +17,38 @@ function runQuery(search) {
     method: "GET"
   }).done(function(res) {
 
-    console.log(res);
-
     // erase current results if any
     $('#rep-results').empty();
 
     // for looping through the object and logging all the officials
-    for (let i = 0; i < res.officials.length - 1; i++) {
+    for (let i = 0; i < res.officials.length; i++) {
 
       // binding to hold the official indices position
       let pos = res.offices[i].officialIndices;
 
-      console.log(pos);
-
       for (let j = 0; j < pos.length; j++) {
 
-        let name = res.officials[pos[j]].name;
-        let office = res.offices[i].name;
-        let party = "";
-        let photo = res.officials[pos[j]].photoUrl || "https://via.placeholder.com/130x180";
+        let rep = {
+          name: res.officials[pos[j]].name,
+          office: res.offices[i].name,
+          party: "",
+          photo: res.officials[pos[j]].photoUrl || "https://via.placeholder.com/130x180"
+        };
 
         if (res.officials[i].party == "Republican Party" || res.officials[i].party == "Republican") {
-          party = "Republican";
+          rep.party = "Republican";
         }
         else if (res.officials[i].party == "Democratic Party" || res.officials[i].party == "Democratic") {
-          party = "Democratic";
+          rep.party = "Democratic";
         }
 
-        buildRepCard(name, office, party, photo);
-
+        // build rep card
+        buildRepCard(rep.name, rep.office, rep.party, rep.photo);
       }
+
       // set search input bar to empty
       $('#adSearch').val('');
     }
-
   });
 }
 
@@ -60,7 +58,7 @@ function votingQuery(search) {
     url: search,
     method: "GET"
   }).fail(function(res) {
-    $('#locations-results').empty();
+    $('#locations-results, #up-elections').empty();
     console.log("Error: " + res.status)
     voteLocationFail();
   })
@@ -69,6 +67,9 @@ function votingQuery(search) {
     // erase any existing data
     $('#locations-results').empty();
     $('#polling-results').empty();
+
+    // bindings for max length
+    let pollingMax = res.pollingLocations.length;
 
     // console log the response object for help traversing
     console.log(res);
@@ -84,10 +85,10 @@ function votingQuery(search) {
       let locEnd = res.earlyVoteSites[i].endDate;
 
       buildVoteLocation(locName, locAddress, locCity, locState, locZip, locStart, locEnd);
-    }
+    };
 
     // setting to only 6 cards at the moment so I can icnlude a "show more >>" button or pagination
-    for (let j = 0; j < 6; j++) {
+    for (let j = 0; j < res.pollingLocations.length; j++) {
       let pollName = res.pollingLocations[j].address.locationName;
       let pollAddress = res.pollingLocations[j].address.line1;
       let pollCity = res.pollingLocations[j].address.city;
@@ -95,8 +96,20 @@ function votingQuery(search) {
       let pollZip = res.pollingLocations[j].address.zip;
       let pollHours = res.pollingLocations[j].pollingHours;
 
-      buildPollingLocation(pollName, pollAddress, pollCity, pollState, pollZip, pollHours);
-    }
+
+      buildPollingLocation(pollName, pollAddress, pollCity, pollState, pollZip, pollHours, j);
+
+      if (j == 5) {
+        let viewMore = `<div id="view-all-polls" class="col-sm-12 text-right">
+                          <button class="btn btn-primary" onclick="showAllPolls(` + j + `, ` + pollingMax +`)">View All</button>
+                        </div>`;
+
+        $('#polling-results').append(viewMore);
+      };
+
+    };
+
+    buildUpElect(res.election.name, res.election.electionDay);
 
   });
 }
@@ -121,11 +134,39 @@ $("#searchBtn").on("click", function() {
 
 });
 
+// click handler for view all
+const showAllPolls = (count, max) => {
+
+  $('#view-all-polls').remove();
+
+  for (let i = count; i < max; i++) {
+    $('#poll-' + i).removeClass('d-none');
+  }
+
+};
+
+
+// function to build upcoming elections card
+const buildUpElect = (election, date) => {
+
+  let card =`<div class="card w-100 shadow">
+              <h3 class="card-header text-center">Upcoming Election</h5>
+              <div class="card-body">
+                <h5 class="card-title text-center">`
+                + election +
+                `</h5>
+                <h6 class="text-center">Election Day: ` + date + `</h6>
+              </div>
+            </div>`;
+
+  $('#up-elections').append(card);
+};
+
 
 // function to build representative card
 const buildRepCard = (name, office, party, photo) => {
 
-  let card = `<div class="card shadow mb-3" style="width: 520px;">
+  let card = `<div class="card shadow mb-3 mx-auto" style="width: 520px;">
                 <div class="row no-gutters">
                   <div class="col-md-3">
                     <img src="` + photo + `" class="card-img" alt="..." style="height: 100%;">
@@ -148,66 +189,77 @@ const buildRepCard = (name, office, party, photo) => {
 // function to build location card
 const buildVoteLocation = (name, address, city, state, zip, start, end) => {
 
-  let location = `<div class="card shadow" style="width: 21rem; height 50rem;">
+  let gURL = googleMe(name);
+
+  let card = `<div class="card shadow mx-auto" style="width: 21rem; height 50rem;">
                     <div class="card-body d-flex align-items-start flex-column">
-                      <div>
+                      <div class="mx-auto">
                         <h5 class="card-title">` + name + `</h5>
                       </div>
-                      <div class="mt-auto">
+                      <div class="mt-auto mx-auto">
                         <h6 class="card-subtitle mb-2 text-muted">` + address + `</h6>
                         <h6 class="card-subtitle mb-2 text-muted">` + city + `, ` + state + ` ` + zip + `</h6>
-                        <div class="mb-2">
-                          <p class="card-text"><strong>Start:</strong> ` + start + `</p>
-                          <p class="card-text"><strong>End:</strong> ` + end + `</p>
-                        </div>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
                       </div>
+                      <div class="mb-2 mx-auto">
+                        <p class="card-text"><strong>Start:</strong> ` + start + ` <strong>End:</strong> ` + end + `</p>
+                      </div>
+                      <a href="` + gURL + `" class="btn btn-primary btn-block" target="_blank">Learn More</a>
                     </div>
                   </div>`;
 
   // append the location card
-  $('#locations-results').append(location);
+  $('#locations-results').append(card);
 };
 
 // function to build polling card
-const buildPollingLocation = (name, address, city, state, zip, hours) => {
+const buildPollingLocation = (name, address, city, state, zip, hours, count) => {
 
-  let location = `<div class="card shadow" style="width: 21rem; height 50rem;">
+  let card = `<div id="poll-` + count + `" class="card shadow" style="width: 21rem; height 50rem;">
                     <div class="card-body d-flex align-items-start flex-column">
-                      <div>
+                      <div class="mx-auto">
                         <h5 class="card-title">` + name + `</h5>
                       </div>
-                      <div class="mt-auto">
+                      <div class="mt-auto mx-auto">
                         <h6 class="card-subtitle mb-2 text-muted">` + address + `</h6>
                         <h6 class="card-subtitle mb-2 text-muted">` + city + `, ` + state + ` ` + zip + `</h6>
-                        <div class="mb-2">
-                          <p class="card-text"><strong>Start:</strong> ` + hours + `</p>
-                        </div>
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
                       </div>
+                      <div class="mb-2 mx-auto">
+                        <p class="card-text">` + hours + `</p>
+                      </div>
+                      <a href="#" class="card-link">Card link</a>
                     </div>
                   </div>`;
 
+
   // append the location card
-  $('#polling-results').append(location);
+  $('#polling-results').append(card);
+
+  if (count > 5) {
+    $('#poll-' + count).addClass('d-none');
+  };
+
+
+
 };
 
 // function to build placeholder on fail
 const voteLocationFail = () => {
 
-  let failMessage = `<div class="card text-center w-100 alert alert-danger">
+  let card = `<div class="card text-center w-100 alert alert-danger">
                       <div class="card-body">
                         <h5 class="card-title">No Upcoming Elections</h5>
                         <p class="card-text">No state or national elections are set to take place in the near future.</p>
                       </div>
                      </div>`;
 
-  $("#locations-results").append(failMessage);
+  $("#locations-results, #up-elections").append(card);
 
 };
 
+// create google search link based on string
+const googleMe = (str) => {
+  return "https://www.google.com/search?q=" + str.split(" ").join("+");
+};
 
 
 // function to turn string into camel case
