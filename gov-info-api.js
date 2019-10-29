@@ -17,8 +17,13 @@ function runQuery(search) {
     method: "GET"
   }).done(function(res) {
 
+    let count = 0;
+
     // erase current results if any
     $('#rep-results').empty();
+
+    // binding for max length
+    let officialsMax = res.officials.length;
 
     // for looping through the object and logging all the officials
     for (let i = 0; i < res.officials.length; i++) {
@@ -27,6 +32,8 @@ function runQuery(search) {
       let pos = res.offices[i].officialIndices;
 
       for (let j = 0; j < pos.length; j++) {
+
+        count++;
 
         let rep = {
           name: res.officials[pos[j]].name,
@@ -43,8 +50,11 @@ function runQuery(search) {
         }
 
         // build rep card
-        buildRepCard(rep.name, rep.office, rep.party, rep.photo);
+        buildRepCard(rep.name, rep.office, rep.party, rep.photo, count);
+        viewAll(count, officialsMax, '#rep-results', "rep");
+
       }
+
 
       // set search input bar to empty
       $('#adSearch').val('');
@@ -70,12 +80,13 @@ function votingQuery(search) {
 
     // bindings for max length
     let pollingMax = res.pollingLocations.length;
+    let votingMax = res.earlyVoteSites.length;
 
     // console log the response object for help traversing
     console.log(res);
 
     // setting to only half the amount of cards that the response object can help create so I can icnlude a "show more >>" button or pagination
-    for (let i = 0; i < res.earlyVoteSites.length / 2; i++) {
+    for (let i = 0; i < res.earlyVoteSites.length; i++) {
       let locName = camelCaseMe(res.earlyVoteSites[i].address.locationName);
       let locAddress = res.earlyVoteSites[i].address.line1;
       let locCity = res.earlyVoteSites[i].address.city;
@@ -84,7 +95,8 @@ function votingQuery(search) {
       let locStart = res.earlyVoteSites[i].startDate;
       let locEnd = res.earlyVoteSites[i].endDate;
 
-      buildVoteLocation(locName, locAddress, locCity, locState, locZip, locStart, locEnd);
+      buildVoteLocation(locName, locAddress, locCity, locState, locZip, locStart, locEnd, i);
+      viewAll(i, votingMax, '#locations-results', "vote");
     };
 
     // setting to only 6 cards at the moment so I can icnlude a "show more >>" button or pagination
@@ -98,14 +110,7 @@ function votingQuery(search) {
 
 
       buildPollingLocation(pollName, pollAddress, pollCity, pollState, pollZip, pollHours, j);
-
-      if (j == 5) {
-        let viewMore = `<div id="view-all-polls" class="col-sm-12 text-right">
-                          <button class="btn btn-primary" onclick="showAllPolls(` + j + `, ` + pollingMax +`)">View All</button>
-                        </div>`;
-
-        $('#polling-results').append(viewMore);
-      };
+      viewAll(j, pollingMax, '#polling-results', "poll");
 
     };
 
@@ -135,12 +140,12 @@ $("#searchBtn").on("click", function() {
 });
 
 // click handler for view all
-const showAllPolls = (count, max) => {
+const showAll = (count, max, name) => {
 
-  $('#view-all-polls').remove();
+  $('#view-all-' + name).remove();
 
   for (let i = count; i < max; i++) {
-    $('#poll-' + i).removeClass('d-none');
+    $('#' + name + '-' + i).removeClass('d-none');
   }
 
 };
@@ -164,9 +169,9 @@ const buildUpElect = (election, date) => {
 
 
 // function to build representative card
-const buildRepCard = (name, office, party, photo) => {
+const buildRepCard = (name, office, party, photo, count) => {
 
-  let card = `<div class="card shadow mb-3 mx-auto" style="width: 520px;">
+  let card = `<div id="rep-` + count + `" class="card shadow mb-3 mx-auto" style="width: 520px;">
                 <div class="row no-gutters">
                   <div class="col-md-3">
                     <img src="` + photo + `" class="card-img" alt="..." style="height: 100%;">
@@ -184,14 +189,20 @@ const buildRepCard = (name, office, party, photo) => {
 
     // append the representative card
     $('#rep-results').append(card);
+
+    // add display none class for results coming after 6
+    if (count > 5) {
+      $('#rep-' + count).addClass('d-none');
+    }
+
 };
 
 // function to build location card
-const buildVoteLocation = (name, address, city, state, zip, start, end) => {
+const buildVoteLocation = (name, address, city, state, zip, start, end, count) => {
 
   let gURL = googleMe(name);
 
-  let card = `<div class="card shadow mx-auto" style="width: 21rem; height 50rem;">
+  let card = `<div id="vote-` + count + `" class="card shadow mx-auto" style="width: 21rem; height 50rem;">
                     <div class="card-body d-flex align-items-start flex-column">
                       <div class="mx-auto">
                         <h5 class="card-title">` + name + `</h5>
@@ -209,6 +220,12 @@ const buildVoteLocation = (name, address, city, state, zip, start, end) => {
 
   // append the location card
   $('#locations-results').append(card);
+
+  // add display none class for results coming after 6
+  if (count > 5) {
+    $('#vote-' + count).addClass('d-none');
+  }
+
 };
 
 // function to build polling card
@@ -234,11 +251,10 @@ const buildPollingLocation = (name, address, city, state, zip, hours, count) => 
   // append the location card
   $('#polling-results').append(card);
 
+  // add display none class for results coming after 6
   if (count > 5) {
     $('#poll-' + count).addClass('d-none');
-  };
-
-
+  }
 
 };
 
@@ -290,7 +306,21 @@ const camelCaseMe = (str) => {
 
 const upperMe = (str) => {
   return str.charAt(0).toUpperCase;
-}
+};
+
+// function to build the view all button for reach section
+const viewAll = (count, max, id, name) => {
+
+  if (count == 5) {
+
+    let viewAllButton = `<div id="view-all-` + name + `" class="col-sm-12 text-right pr-4">
+                          <button class="btn btn-primary" onclick="showAll(` + count + `, ` + max + `, '` + name + `')">View All</button>
+                         </div>`;
+
+    $(id).append(viewAllButton);
+  }
+
+};
 
 // call function on page load to populate content
 runQuery(baseQueryURL + "615 Red River St, Austin, TX 78701");
