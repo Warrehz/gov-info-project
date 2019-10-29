@@ -68,7 +68,8 @@ function votingQuery(search) {
     url: search,
     method: "GET"
   }).fail(function(res) {
-    $('#locations-results, #up-elections').empty();
+    $('#locations-results, #up-elections, #polling-results').empty();
+    $('#voting-locations, #early-voting, #polling-locations').remove();
     console.log("Error: " + res.status)
     voteLocationFail();
   })
@@ -154,6 +155,9 @@ const showAll = (count, max, name) => {
 // function to build upcoming elections card
 const buildUpElect = (election, date) => {
 
+  // empty any existing content
+  $('#up-elections').empty();
+
   let card =`<div class="card w-100 shadow">
               <h3 class="card-header text-center">Upcoming Election</h5>
               <div class="card-body">
@@ -174,7 +178,7 @@ const buildRepCard = (name, office, party, photo, count) => {
   let card = `<div id="rep-` + count + `" class="card shadow mb-3 mx-auto" style="width: 520px;">
                 <div class="row no-gutters">
                   <div class="col-md-3">
-                    <img src="` + photo + `" class="card-img" alt="..." style="height: 100%;">
+                    <img src="` + photo + `" class="card-img" alt="...">
                   </div>
                   <div class="col-md-9">
                     <div class="card-body">
@@ -231,7 +235,7 @@ const buildVoteLocation = (name, address, city, state, zip, start, end, count) =
 // function to build polling card
 const buildPollingLocation = (name, address, city, state, zip, hours, count) => {
 
-  let card = `<div id="poll-` + count + `" class="card shadow" style="width: 21rem; height 50rem;">
+  let card = `<div id="poll-` + count + `" class="card shadow mx-auto" style="width: 21rem; height 50rem;">
                     <div class="card-body d-flex align-items-start flex-column">
                       <div class="mx-auto">
                         <h5 class="card-title">` + name + `</h5>
@@ -268,7 +272,7 @@ const voteLocationFail = () => {
                       </div>
                      </div>`;
 
-  $("#locations-results, #up-elections").append(card);
+  $("#up-elections").append(card);
 
 };
 

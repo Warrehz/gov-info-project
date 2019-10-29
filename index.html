@@ -10,8 +10,8 @@
   <body>
 
     <!-- nav -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">We the People</a>
+    <nav class="navbar navbar-light navbar-expand-lg">
+      <a class="navbar-brand" href="#"><img src="assets/images/american-flag.png"></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -19,15 +19,15 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link navbar-brand" href="#">We the People</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Link</a>
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          <input id="navSearch" class="form-control mr-sm-2" type="search" placeholder="1600 Pennslyvania Ave NW, Washington, DC 20500" aria-label="Search">
+          <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
         </form>
       </div>
     </nav>
@@ -62,7 +62,7 @@
         </div>
       </div>
 
-      <div class="row text-center mt-3">
+      <div id="early-voting" class="row text-center mt-3">
         <div class="col-sm-12">
           <h3>Early Voting Locations</h3>
         </div>
@@ -74,7 +74,7 @@
         </div>
       </div>
 
-      <div class="row text-center mt-3">
+      <div id="polling-locations" class="row text-center mt-3">
         <div class="col-sm-12">
           <h3>Polling Locations</h3>
         </div>

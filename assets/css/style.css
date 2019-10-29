@@ -8,6 +8,10 @@ button#searchBtn {
   border-radius: 0px .25rem .25rem 0px;
 }
 
+input#navSearch {
+  width: 25rem;
+}
+
 .card {
   margin: 1rem;
 }
