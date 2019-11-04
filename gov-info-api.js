@@ -92,9 +92,9 @@ function votingQuery(search) {
     if (res.earlyVoteSites) {
       let votingMax = res.earlyVoteSites.length;
 
-      // setting to only half the amount of cards that the response object can help create so I can icnlude a "show more >>" button or pagination
       for (let i = 0; i < res.earlyVoteSites.length; i++) {
-        let locName = camelCaseMe(res.earlyVoteSites[i].address.locationName);
+
+        let locName = camelCaseMe(res.earlyVoteSites[i].name);
         let locAddress = res.earlyVoteSites[i].address.line1;
         let locCity = res.earlyVoteSites[i].address.city;
         let locState = res.earlyVoteSites[i].address.state;
@@ -161,6 +161,8 @@ const showAll = (count, max, name) => {
 
 // function to build upcoming elections card
 const buildUpElect = (election, date) => {
+
+  $('#up-elections').empty();
 
   let card =`<div id="upcoming-election" class="card w-90 shadow">
               <div class="card-body">
