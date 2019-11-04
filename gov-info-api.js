@@ -68,12 +68,13 @@ function votingQuery(search) {
     url: search,
     method: "GET"
   }).fail(function(res) {
-    $('#locations-results, #up-elections, #polling-results').empty();
-    $('#voting-locations, #early-voting, #polling-locations').remove();
     console.log("Error: " + res.status)
-    voteLocationFail();
+    $('#up-elections').empty();
+    failMessage("Please provide a complete home address to find information on elections affecting you and your surrounding area.", "up-elections");
   })
   .done(function(res) {
+
+    console.log(res);
 
     // erase any existing data
     $('#locations-results').empty();
@@ -81,24 +82,32 @@ function votingQuery(search) {
 
     // bindings for max length
     let pollingMax = res.pollingLocations.length;
-    let votingMax = res.earlyVoteSites.length;
 
-    // console log the response object for help traversing
-    console.log(res);
+    if (res.election.name) {
+      buildUpElect(res.election.name, res.election.electionDay);
+    } else {
+      failMessage("There are no national, state, or local elections in the near future.", "up-elections");
+    }
 
-    // setting to only half the amount of cards that the response object can help create so I can icnlude a "show more >>" button or pagination
-    for (let i = 0; i < res.earlyVoteSites.length; i++) {
-      let locName = camelCaseMe(res.earlyVoteSites[i].address.locationName);
-      let locAddress = res.earlyVoteSites[i].address.line1;
-      let locCity = res.earlyVoteSites[i].address.city;
-      let locState = res.earlyVoteSites[i].address.state;
-      let locZip = res.earlyVoteSites[i].address.zip;
-      let locStart = res.earlyVoteSites[i].startDate;
-      let locEnd = res.earlyVoteSites[i].endDate;
+    if (res.earlyVoteSites) {
+      let votingMax = res.earlyVoteSites.length;
 
-      buildVoteLocation(locName, locAddress, locCity, locState, locZip, locStart, locEnd, i);
-      viewAll(i, votingMax, '#locations-results', "vote");
-    };
+      // setting to only half the amount of cards that the response object can help create so I can icnlude a "show more >>" button or pagination
+      for (let i = 0; i < res.earlyVoteSites.length; i++) {
+        let locName = camelCaseMe(res.earlyVoteSites[i].address.locationName);
+        let locAddress = res.earlyVoteSites[i].address.line1;
+        let locCity = res.earlyVoteSites[i].address.city;
+        let locState = res.earlyVoteSites[i].address.state;
+        let locZip = res.earlyVoteSites[i].address.zip;
+        let locStart = res.earlyVoteSites[i].startDate;
+        let locEnd = res.earlyVoteSites[i].endDate;
+
+        buildVoteLocation(locName, locAddress, locCity, locState, locZip, locStart, locEnd, i);
+        viewAll(i, votingMax, '#locations-results', "vote");
+      };
+    } else {
+      failMessage("Early voting has ended.", "locations-results");
+    }
 
     // setting to only 6 cards at the moment so I can icnlude a "show more >>" button or pagination
     for (let j = 0; j < res.pollingLocations.length; j++) {
@@ -114,8 +123,6 @@ function votingQuery(search) {
       viewAll(j, pollingMax, '#polling-results', "poll");
 
     };
-
-    buildUpElect(res.election.name, res.election.electionDay);
 
   });
 }
@@ -155,11 +162,7 @@ const showAll = (count, max, name) => {
 // function to build upcoming elections card
 const buildUpElect = (election, date) => {
 
-  // empty any existing content
-  $('#up-elections').empty();
-
-  let card =`<div class="card w-100 shadow">
-              <h3 class="card-header text-center">Upcoming Election</h5>
+  let card =`<div id="upcoming-election" class="card w-90 shadow">
               <div class="card-body">
                 <h5 class="card-title text-center">`
                 + election +
@@ -263,16 +266,17 @@ const buildPollingLocation = (name, address, city, state, zip, hours, count) => 
 };
 
 // function to build placeholder on fail
-const voteLocationFail = () => {
+const failMessage = (message, id) => {
 
-  let card = `<div class="card text-center w-100 alert alert-danger">
+  $("#" + id).empty();
+
+  let card = `<div class="card text-center w-90 alert alert-danger shadow">
                       <div class="card-body">
-                        <h5 class="card-title">No Upcoming Elections</h5>
-                        <p class="card-text">No state or national elections are set to take place in the near future.</p>
+                        <p class="card-text">` + message + `</p>
                       </div>
                      </div>`;
 
-  $("#up-elections").append(card);
+  $("#" + id).append(card);
 
 };
 
