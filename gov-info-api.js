@@ -17,6 +17,8 @@ function runQuery(search) {
     method: "GET"
   }).done(function(res) {
 
+    console.log(res);
+
     let count = 0;
 
     // erase current results if any
@@ -71,6 +73,8 @@ function votingQuery(search) {
     console.log("Error: " + res.status)
     $('#up-elections').empty();
     failMessage("Please provide a complete home address to find information on elections affecting you and your surrounding area.", "up-elections");
+    $('#polling-results').empty();
+    failMessage("Please provide a complete home address to find information on open polling locations near you.", "polling-results");
   })
   .done(function(res) {
 
@@ -152,7 +156,7 @@ const showAll = (count, max, name) => {
 
   $('#view-all-' + name).remove();
 
-  for (let i = count; i < max; i++) {
+  for (let i = count; i <= max; i++) {
     $('#' + name + '-' + i).removeClass('d-none');
   }
 
@@ -240,7 +244,7 @@ const buildVoteLocation = (name, address, city, state, zip, start, end, count) =
 // function to build polling card
 const buildPollingLocation = (name, address, city, state, zip, hours, count) => {
 
-  let card = `<div id="poll-` + count + `" class="card shadow mx-auto" style="width: 21rem; height 50rem;">
+  let card = `<div id="poll-` + count + `" class="card shadow" style="width: 21rem; height 50rem;">
                     <div class="card-body d-flex align-items-start flex-column">
                       <div class="mx-auto">
                         <h5 class="card-title">` + name + `</h5>
